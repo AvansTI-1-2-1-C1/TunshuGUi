@@ -25,7 +25,7 @@ public class Robot {
         this.parity = 0;
     }
 
-    private void init(){
+    public void init(){
         try{
             this.serialPort.openPort();
             System.out.println();
