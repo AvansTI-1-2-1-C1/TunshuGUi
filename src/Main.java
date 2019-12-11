@@ -1,11 +1,10 @@
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.application.Application;
@@ -44,7 +43,35 @@ public class Main extends Application{
 
         BorderPane centerControlLayout = new BorderPane();
 
-        Label tunshuName = new Label();
+        Label tunshuName = new Label("TEST TITLE");
+        tunshuName.setStyle("-fx-font-size: 42");
+
+        GridPane buttonControlLayout = new GridPane();
+        Button driveForward = new Button();
+        Button driveLeft = new Button();
+        Button driveRight = new Button();
+        Button driveBack = new Button();
+        Button brake = new Button();
+
+        //buttonControlLayout.setPadding( new Insets(50,50,50,50) );
+        buttonControlLayout.setHgap(10.0);
+        buttonControlLayout.setVgap(10.0);
+
+        driveForward.setMinSize(100.0,100.0);
+        driveLeft.setMinSize(100.0,100.0);
+        driveRight.setMinSize(100.0,100.0);
+        driveBack.setMinSize(100.0,100.0);
+        brake.setMinSize(320.0, 100.0);
+
+        buttonControlLayout.add(driveForward,1, 0);
+        buttonControlLayout.add(driveLeft, 0, 1);
+        buttonControlLayout.add(driveRight, 2, 1);
+        buttonControlLayout.add(driveBack, 1, 1);
+        buttonControlLayout.add(brake, 0,2,3,1);
+
+
+        centerControlLayout.setTop(tunshuName);
+        centerControlLayout.setCenter(buttonControlLayout);
 
         return centerControlLayout;
 
