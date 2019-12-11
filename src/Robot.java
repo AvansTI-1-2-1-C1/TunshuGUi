@@ -4,20 +4,27 @@ import jssc.SerialPortException;
 public class Robot {
 
     private SerialPort serialPort;
+    private String name;
+    private int status;
     private int baudrate;
     private int databits;
     private int stopbits;
     private int parity;
+    private String currentTask;
 
-    public Robot(String com) {
+    public Robot(String name,String com) {
+        this.name = name;
         this.serialPort = new SerialPort(com);
         this.baudrate = 115200;
         this.databits = 8;
         this.stopbits = 1;
         this.parity = 0;
+        this.status = 0;
+        this.currentTask = "--";
     }
 
-    public Robot(int com){
+    public Robot(String name,int com){
+        this.name = name;
         this.serialPort = new SerialPort("COM" + com);
         this.baudrate = 115200;
         this.databits = 8;
@@ -62,5 +69,38 @@ public class Robot {
 
     public String getPort() {
         return serialPort.getPortName();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getStatus() {
+        String state = "error";
+        switch (this.status){
+            case 0:
+                state = "N/A";
+                break;
+            case 1:
+                state = "idle";
+                break;
+            case 2:
+                state = "driving";
+                break;
+            case 3:
+                state = "Following line";
+                break;
+            case 4:
+                state = "alert";
+                break;
+            case 5:
+                state = "error";
+                break;
+        }
+        return state;
+    }
+
+    public String getCurrentTask() {
+        return currentTask;
     }
 }
