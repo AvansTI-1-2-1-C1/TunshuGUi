@@ -1,0 +1,17 @@
+.listView {
+    -fx-border-width: 0;
+}
+
+.list-cell {
+   -fx-background-color: #1F1826;
+}
+
+.list-cell:odd {
+    -fx-background-color: #28202F;
+}
+
+.list-cell:selected {
+    -fx-border-style: solid;
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: white;
+}
