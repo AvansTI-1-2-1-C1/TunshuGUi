@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.application.Application;
 
@@ -94,31 +95,67 @@ public class Main extends Application {
         informationContainer.setMinSize(230,242);
         informationContainer.setMaxSize(230,242);
         informationContainer.setStyle("-fx-background-radius: 10; -fx-background-color: #28202F;");
+        informationContainer.setAlignment(Pos.TOP_CENTER);
+
+        Label informationTitle = new Label("Information");
+        informationTitle.setStyle("-fx-font-size: 15; -fx-font-family: 'Helvetica';");
+        informationTitle.setTextFill(Color.WHITE);
+        informationTitle.setPadding(new Insets( 5, 0,5,0));
+
+        informationContainer.getChildren().add(informationTitle);
 
         VBox botFunNavContainer = new VBox();
         botFunNavContainer.setMinSize(236,242);
         botFunNavContainer.setMaxSize(236,242);
         HBox.setMargin( botFunNavContainer, new Insets(0,0,0,18));
 
-        HBox botFunctionsContainer = new HBox();
+        VBox botFunctionsContainer = new VBox();
         botFunctionsContainer.setMinSize(236, 112);
         botFunctionsContainer.setMaxSize(236,112);
         botFunctionsContainer.setStyle("-fx-background-radius: 10; -fx-background-color: #28202F;");
-        VBox.setMargin( botFunctionsContainer, new Insets(0,0,0,0));
+        //VBox.setMargin( botFunctionsContainer, new Insets(0,0,0,0));
+        botFunctionsContainer.setAlignment(Pos.TOP_CENTER);
+
+        Label functionsTitle = new Label("Functions");
+        functionsTitle.setStyle("-fx-font-size: 15; -fx-font-family: 'Helvetica';");
+        functionsTitle.setTextFill(Color.WHITE);
+        functionsTitle.setPadding(new Insets( 5, 0,5,0));
+
+        botFunctionsContainer.getChildren().add(functionsTitle);
+        //botFunctionsContainer.getChildren().add(onOffLights());
+        botFunctionsContainer.getChildren().add(muteUnMuteSound());
+        botFunctionsContainer.getChildren().add(speedSlider());
 
         HBox botNavContainer = new HBox();
         botNavContainer.setMinSize(236, 112);
         botNavContainer.setMaxSize(236,112);
         botNavContainer.setStyle("-fx-background-radius: 10; -fx-background-color: #28202F;");
         VBox.setMargin( botNavContainer, new Insets(18,0,0,0));
+        botNavContainer.setAlignment(Pos.TOP_CENTER);
+
+        Label navigationTitle = new Label("Navigation");
+        navigationTitle.setStyle("-fx-font-size: 15; -fx-font-family: 'Helvetica';");
+        navigationTitle.setTextFill(Color.WHITE);
+        navigationTitle.setPadding(new Insets( 5, 0,5,0));
+
+        botNavContainer.getChildren().add(navigationTitle);
 
         HBox insideCenterControlLayoutDown =  new HBox();
         insideCenterControlLayoutDown.setMinSize(484,242);
         insideCenterControlLayoutDown.setMaxSize(484,242);
         insideCenterControlLayoutDown.setStyle("-fx-background-radius: 10; -fx-background-color: #28202F;");
         VBox.setMargin( insideCenterControlLayoutDown, new Insets(18,0,0,10));
+        insideCenterControlLayoutDown.setAlignment(Pos.TOP_CENTER);
 
-        HBox bottomControlContainer = new HBox();
+        Label controlTitle = new Label("Manual Control");
+        controlTitle.setStyle("-fx-font-size: 15; -fx-font-family: 'Helvetica';");
+        controlTitle.setTextFill(Color.WHITE);
+        controlTitle.setPadding(new Insets( 10, 0,5,0));
+
+        VBox bottomControlContainer = new VBox();
+        bottomControlContainer.setAlignment(Pos.TOP_CENTER);
+
+        bottomControlContainer.getChildren().add(controlTitle);
 
         botFunNavContainer.getChildren().addAll(botFunctionsContainer,botNavContainer);
 
@@ -133,6 +170,13 @@ public class Main extends Application {
 
         GridPane buttonControlLayout = new GridPane();
         Button driveForward = new Button();
+
+        driveForward.setOnAction( event -> {
+
+            GuiLogic....
+
+        } );
+
         Button driveLeft = new Button();
         Button driveRight = new Button();
         Button driveBack = new Button();
@@ -142,28 +186,28 @@ public class Main extends Application {
         Button lineFollower = new Button();
 
         //#111111 : grey
-        driveForward.setStyle("-fx-background-color: black");
-        driveLeft.setStyle("-fx-background-color: black");
-        driveRight.setStyle("-fx-background-color: black");
-        driveBack.setStyle("-fx-background-color: black");
-        brake.setStyle("-fx-background-color: black");
+        driveForward.setStyle("-fx-background-color: #1F1826");
+        driveLeft.setStyle("-fx-background-color: #1F1826");
+        driveRight.setStyle("-fx-background-color: #1F1826");
+        driveBack.setStyle("-fx-background-color: #1F1826");
+        brake.setStyle("-fx-background-color: #1F1826");
         emergencyBrake.setStyle("-fx-background-color: #DF1D1D");
         mute.setStyle("-fx-background-color: black");
         lineFollower.setStyle("-fx-background-color: black");
 
         driveForward.setOnMouseEntered(e -> driveForward.setStyle("-fx-background-color: #242424; "));
-        driveForward.setOnMouseExited(e -> driveForward.setStyle("-fx-background-color: black;"));
+        driveForward.setOnMouseExited(e -> driveForward.setStyle("-fx-background-color: #1F1826;"));
 
         //buttonControlLayout.setPadding( new Insets(50,50,50,50) );
         buttonControlLayout.setHgap(10.0);
         buttonControlLayout.setVgap(10.0);
 
-        driveForward.setMinSize(100.0,100.0);
-        driveLeft.setMinSize(100.0,100.0);
-        driveRight.setMinSize(100.0,100.0);
-        driveBack.setMinSize(100.0,100.0);
-        brake.setMinSize(320.0, 70.0);
-        brake.setMaxSize(320.0,70.0);
+        driveForward.setMinSize(60.0,60.0);
+        driveLeft.setMinSize(60.0,60.0);
+        driveRight.setMinSize(60.0,60.0);
+        driveBack.setMinSize(60.0,60.0);
+        brake.setMinSize(126, 60.0);
+        brake.setMaxSize(126, 60.0);
 
         emergencyBrake.setMinSize(70.0,70.0);
         mute.setMinSize(70.0,70.0);
@@ -173,23 +217,68 @@ public class Main extends Application {
         buttonControlLayout.add(driveLeft, 0, 1);
         buttonControlLayout.add(driveRight, 2, 1);
         buttonControlLayout.add(driveBack, 1, 1);
-        buttonControlLayout.add(brake, 0,3,3,1);
-        buttonControlLayout.add(emergencyBrake,0,8);
-        buttonControlLayout.add(lineFollower,1,8);
-        buttonControlLayout.add(mute,2,8);
+        buttonControlLayout.add(brake, 4,1,3,1);
+//        buttonControlLayout.add(emergencyBrake,0,8);
+//        buttonControlLayout.add(lineFollower,1,8);
+//        buttonControlLayout.add(mute,2,8);
 
         buttonControlLayout.setHalignment(emergencyBrake, HPos.CENTER);
         buttonControlLayout.setHalignment(lineFollower, HPos.CENTER);
         buttonControlLayout.setHalignment(mute, HPos.CENTER);
 
+        buttonControlLayout.setPadding(new Insets(35,0,0,0));
+
         //centerControlLayout.setTop(tunshuName);
-        //centerControlLayout.setCenter(buttonControlLayout);
+        bottomControlContainer.getChildren().add(buttonControlLayout);
         //centerControlLayout.setCenter(bottomControlContainer);
 
         //centerControlLayout.getChildren().addAll(informationContainer, botFunctionsContainer, botNavContainer, bottomControlContainer);
 
         return centerControlLayout;
 
+    }
+
+    private Node speedSlider() {
+
+        HBox speedSliderContainer = new HBox();
+        speedSliderContainer.setPadding( new Insets(0,0,0,15));
+
+        Label speedSliderTitle = new Label("Speed");
+        speedSliderTitle.setTextFill(Color.WHITE);
+        speedSliderTitle.setStyle("-fx-font-size: 13; -fx-font-family: 'Helvetica';");
+        speedSliderTitle.setPadding(new Insets(3,0,0,2));
+
+        Slider speedSlider = new Slider();
+        speedSlider.setMax(100.0);
+        speedSlider.setMin(0.0);
+        speedSlider.setValue(40.0);
+        speedSlider.setPadding( new Insets(3,0,0,5));
+
+        speedSliderContainer.getChildren().addAll(speedSliderTitle, speedSlider);
+
+        return speedSliderContainer;
+    }
+
+    private Node muteUnMuteSound() {
+
+        VBox soundMuteContainer = new VBox();
+        soundMuteContainer.setPadding( new Insets(0,0,0,15));
+
+//        Label soundMuteTitle = new Label("Sound");
+//        soundMuteTitle.setTextFill(Color.WHITE);
+//        soundMuteTitle.setStyle("-fx-font-size: 12; -fx-font-family: 'Helvetica';");
+
+        ToggleGroup soundAndKLightsTGroup = new ToggleGroup();
+        RadioButton muteUnMuteButton = new RadioButton("Sound");
+        RadioButton onOffLightsButton = new RadioButton("Lights ");
+
+        muteUnMuteButton.setToggleGroup(soundAndKLightsTGroup);
+        onOffLightsButton.setToggleGroup(soundAndKLightsTGroup);
+
+        soundMuteContainer.getChildren().addAll(muteUnMuteButton, onOffLightsButton);
+
+
+        return soundMuteContainer;
     }
 
     private Node topBar() {
@@ -214,8 +303,12 @@ public class Main extends Application {
     public Node botList() {
         ListView listView = new ListView();
         listView.getStyleClass().add("listView.css");
-        listView.setMinHeight(502.0);
+        listView.setMinHeight(450.0);
         listView.setMinWidth(263.0);
+        listView.setMaxHeight(450);
+        listView.setMaxWidth(263.0);
+        //listView.setFixedCellSize(90);
+        //listView.setPadding(new Insets(52,0,0,0));
 
 
         for (Robot bot : this.robots) {
@@ -225,9 +318,17 @@ public class Main extends Application {
         }
         this.selected = listView.getSelectionModel().getSelectedIndex();
 
+        Label botListTitle = new Label("Bot List");
+        botListTitle.setStyle("-fx-font-size: 15; -fx-font-family: 'Helvetica';");
+        botListTitle.setTextFill(Color.WHITE);
+        botListTitle.setPadding(new Insets( 5, 0,5,0));
+
+
         VBox vBox = new VBox();
-        //vBox.getChildren().add(new Label("Bot status"));
+        vBox.getChildren().add(botListTitle);
+        vBox.setAlignment(Pos.TOP_CENTER);
         vBox.getChildren().add(listView);
+
         vBox.setMinHeight(502.0);
         vBox.setMinWidth(263.0);
         vBox.setMaxSize(263.0, 522.0);

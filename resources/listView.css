@@ -1,5 +1,8 @@
-.listView {
+.list-view {
+    -fx-border-color: white;
     -fx-border-width: 0;
+    -fx-padding: 0;
+    -fx-background-insets: 0;
 }
 
 .list-cell {
@@ -8,10 +11,40 @@
 
 .list-cell:odd {
     -fx-background-color: #28202F;
+
 }
 
 .list-cell:selected {
     -fx-border-style: solid;
     -fx-border-width: 0 1 0 0;
     -fx-border-color: white;
+}
+
+.list-cell:empty {
+    -fx-background-color: #28202F;
+}
+
+.radio-button .radio {
+    -fx-background-color: #1F1826;
+    -fx-border-color: #1F1826;
+    -fx-background-image: null;
+    -fx-border-radius: 20px;
+}
+
+.radio-button {
+    -fx-rotate:180;
+    -fx-text-fill: white;
+    -fx-text-family: 'Helvetica';
+    -fx-font-size: 13;
+    -fx-padding: 3 0 0 10;
+}
+
+.radio-button > .text {
+    -fx-rotate: 180;
+    -fx-text-fill: white;
+}
+
+.slider .track {
+    -fx-background-color: #1F1826;
+    -fx-control-inner-background: #1F1826;
 }
