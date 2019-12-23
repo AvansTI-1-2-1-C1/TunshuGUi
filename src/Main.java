@@ -169,17 +169,17 @@ public class Main extends Application {
         tunshuName.setTextFill(Color.WHITE);
 
         GridPane buttonControlLayout = new GridPane();
-        Button driveForward = new Button();
+        Button driveForward = new Button("");
 
         driveForward.setOnAction( event -> {
 
-            GuiLogic....
+            //GuiLogic....
 
         } );
 
-        Button driveLeft = new Button();
-        Button driveRight = new Button();
-        Button driveBack = new Button();
+        Button driveLeft = new Button("");
+        Button driveRight = new Button("");
+        Button driveBack = new Button("");
         Button brake = new Button();
         Button emergencyBrake = new Button();
         Button mute = new Button();
@@ -316,6 +316,8 @@ public class Main extends Application {
                 listView.getItems().add(botGUI(bot));
             }
         }
+
+        listView.getItems().add(addBotButton());
         this.selected = listView.getSelectionModel().getSelectedIndex();
 
         Label botListTitle = new Label("Bot List");
@@ -351,6 +353,17 @@ public class Main extends Application {
         vBox.getChildren().add(new Label("Status: " + bot.getStatus()));
         vBox.getChildren().add(new Label("Current task: " + bot.getCurrentTask()));
         return vBox;
+    }
+
+    private Node addBotButton(){
+
+        Button addBotBotPhysicalButton = new Button("Add robot");
+
+
+        VBox vBox = new VBox();
+        vBox.getChildren().add(addBotBotPhysicalButton);
+        return vBox;
+
     }
 
     public void addRobot(String name, String com) {
