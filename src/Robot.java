@@ -11,8 +11,12 @@ public class Robot {
     private int stopbits;
     private int parity;
     private String currentTask;
+    private boolean muted;
+    private boolean lightsOn;
+    private float speed;
 
-    public Robot(String name,String com) {
+
+    public Robot(String name, String com) {
         this.name = name;
         this.serialPort = new SerialPort(com);
         this.baudrate = 115200;
@@ -21,9 +25,11 @@ public class Robot {
         this.parity = 0;
         this.status = 0;
         this.currentTask = "--";
+        this.muted = getStateComponents(1);
+        this.muted = getStateComponents(2);
     }
 
-    public Robot(String name,int com){
+    public Robot(String name, int com) {
         this.name = name;
         this.serialPort = new SerialPort("COM" + com);
         this.baudrate = 115200;
@@ -32,37 +38,53 @@ public class Robot {
         this.parity = 0;
     }
 
-    public void init(){
-        try{
+    public void init() {
+        try {
             this.serialPort.openPort();
             System.out.println();
-            serialPort.setParams(this.baudrate,this.databits, this.stopbits, this.parity);
-        }
-        catch (SerialPortException e){
+            this.serialPort.setParams(this.baudrate, this.databits, this.stopbits, this.parity);
+        } catch (SerialPortException e) {
             System.out.println(e);
         }
     }
 
-    public void send(String message){
-       try {
-           serialPort.writeString(message);
+    public void send(String message) {
+        try {
+            serialPort.writeString(message);
 
-           byte[] buffer = serialPort.readBytes(10);
+            byte[] buffer = serialPort.readBytes(10);
 
-           for (int i = 0; i < 10; i++) {
-               System.out.print(buffer[i] + '-');
-           }
-       }
-       catch (SerialPortException ex){
-           System.out.println(ex);
-       }
+
+            for (int i = 0; i < 10; i++) {
+                System.out.print(buffer[i] + '-');
+            }
+        } catch (SerialPortException ex) {
+            System.out.println(ex);
+        }
     }
 
-    public void close(){
+    public boolean sendStatus(String message) {
+        try {
+            serialPort.writeString(message);
+
+            byte[] buffer = serialPort.readBytes(1);
+            if (buffer.equals("t")) {
+                return true;
+            } else if (buffer.equals("f")) {
+                return false;
+            } else {
+                return false;
+            }
+        } catch (SerialPortException ex) {
+            System.out.println(ex);
+            return false;
+        }
+    }
+
+    public void close() {
         try {
             serialPort.closePort();
-        }
-        catch (SerialPortException ex){
+        } catch (SerialPortException ex) {
             System.out.println(ex);
         }
     }
@@ -77,7 +99,7 @@ public class Robot {
 
     public String getStatus() {
         String state = "error";
-        switch (this.status){
+        switch (this.status) {
             case 0:
                 state = "N/A";
                 break;
@@ -96,11 +118,28 @@ public class Robot {
             case 5:
                 state = "error";
                 break;
+            default:
+                state = "default";
+
         }
         return state;
     }
 
     public String getCurrentTask() {
         return currentTask;
+    }
+
+    public boolean getStateComponents(int component) {
+        switch (component) {
+//          speaker
+            case 1:
+                return sendStatus("P");
+//          lights
+            case 2:
+                return sendStatus("L");
+            default:
+                return false;
+
+        }
     }
 }
