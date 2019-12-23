@@ -36,6 +36,11 @@ public class Robot {
         this.databits = 8;
         this.stopbits = 1;
         this.parity = 0;
+
+        if(com != 999){
+            System.out.println("init");
+            init();
+        }
     }
 
     public void init() {
@@ -51,13 +56,6 @@ public class Robot {
     public void send(String message) {
         try {
             serialPort.writeString(message);
-
-            byte[] buffer = serialPort.readBytes(10);
-
-
-            for (int i = 0; i < 10; i++) {
-                System.out.print(buffer[i] + '-');
-            }
         } catch (SerialPortException ex) {
             System.out.println(ex);
         }

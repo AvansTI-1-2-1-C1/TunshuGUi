@@ -1,3 +1,5 @@
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -6,12 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.application.Application;
-
-import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -158,14 +156,8 @@ public class Main extends Application {
         tunshuName.setTextFill(Color.WHITE);
 
         GridPane buttonControlLayout = new GridPane();
+
         Button driveForward = new Button("");
-
-        driveForward.setOnAction(event -> {
-
-            //GuiLogic....
-
-        } );
-
         Button driveLeft = new Button("");
         Button driveRight = new Button("");
         Button driveBack = new Button("");
@@ -173,6 +165,32 @@ public class Main extends Application {
         Button emergencyBrake = new Button();
         Button mute = new Button();
         Button lineFollower = new Button();
+
+        driveForward.setOnAction(event -> {
+            guiLogic.button(DriveCommands.Forward);
+        } );
+
+        driveLeft.setOnAction(event -> {
+            guiLogic.button(DriveCommands.Left);
+        } );
+        driveRight.setOnAction(event -> {
+            guiLogic.button(DriveCommands.Right);
+        } );
+        driveBack.setOnAction(event -> {
+            guiLogic.button(DriveCommands.Backward);
+        } );
+        brake.setOnAction(event -> {
+            guiLogic.button(DriveCommands.Brake);
+        } );
+        emergencyBrake.setOnAction(event -> {
+            guiLogic.button(DriveCommands.Handbrake);
+        } );
+        mute.setOnAction(event -> {
+            guiLogic.button(DriveCommands.Mute);
+        } );
+        lineFollower.setOnAction(event -> {
+            guiLogic.button(DriveCommands.LineFollower);
+        } );
 
         //#111111 : grey
         driveForward.setStyle("-fx-background-color: #1F1826");
@@ -186,6 +204,18 @@ public class Main extends Application {
 
         driveForward.setOnMouseEntered(e -> driveForward.setStyle("-fx-background-color: #242424; "));
         driveForward.setOnMouseExited(e -> driveForward.setStyle("-fx-background-color: #1F1826;"));
+
+        driveLeft.setOnMouseEntered(e -> driveLeft.setStyle("-fx-background-color: #242424; "));
+        driveLeft.setOnMouseExited(e -> driveLeft.setStyle("-fx-background-color: #1F1826;"));
+
+        driveRight.setOnMouseEntered(e -> driveRight.setStyle("-fx-background-color: #242424; "));
+        driveRight.setOnMouseExited(e -> driveRight.setStyle("-fx-background-color: #1F1826;"));
+
+        driveBack.setOnMouseEntered(e -> driveBack.setStyle("-fx-background-color: #242424; "));
+        driveBack.setOnMouseExited(e -> driveBack.setStyle("-fx-background-color: #1F1826;"));
+
+        brake.setOnMouseEntered(e -> brake.setStyle("-fx-background-color: #242424; "));
+        brake.setOnMouseExited(e -> brake.setStyle("-fx-background-color: #1F1826;"));
 
         //buttonControlLayout.setPadding( new Insets(50,50,50,50) );
         buttonControlLayout.setHgap(10.0);
@@ -237,11 +267,22 @@ public class Main extends Application {
         speedSliderTitle.setStyle("-fx-font-size: 13; -fx-font-family: 'Helvetica';");
         speedSliderTitle.setPadding(new Insets(3, 0, 0, 2));
 
-        Slider speedSlider = new Slider();
-        speedSlider.setMax(100.0);
-        speedSlider.setMin(0.0);
-        speedSlider.setValue(40.0);
+        Slider speedSlider = new Slider(0.0f,1f,0.4);
+        speedSlider.setBlockIncrement(0.2);//WHY TF WONT YOU WORK?
+        speedSlider.setShowTickMarks(true);
+        speedSlider.setMajorTickUnit(0.1);
+        speedSlider.setMinorTickCount(0);
+        speedSlider.setSnapToTicks(true);
+
         speedSlider.setPadding(new Insets(3, 0, 0, 5));
+
+        speedSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                guiLogic.speedSetting(newValue);
+                System.out.println(newValue);
+            }
+        });
 
         speedSliderContainer.getChildren().addAll(speedSliderTitle, speedSlider);
 
@@ -307,7 +348,7 @@ public class Main extends Application {
         }
 
         listView.getItems().add(addBotButton());
-        this.guiLogic.setSelected(listView.getSelectionModel().getSelectedIndex());
+//        this.guiLogic.setSelected(listView.getSelectionModel().getSelectedIndex());
 
         Label botListTitle = new Label("Bot List");
         botListTitle.setStyle("-fx-font-size: 15; -fx-font-family: 'Helvetica';");
