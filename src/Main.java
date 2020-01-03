@@ -1,12 +1,13 @@
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -69,7 +70,6 @@ public class Main extends Application {
                     System.out.println(key.getCode().getName());
                     break;
             }
-
         });
 
         mainView.getStylesheets().add("listView.css");
@@ -187,7 +187,7 @@ public class Main extends Application {
 
         centerControlLayout.getChildren().addAll(insideCenterControlLayoutUp, insideCenterControlLayoutDown);
 
-        Label tunshuName = new Label(this.guiLogic.getRobots().get(this.guiLogic.getSelected()).getName());
+        Label tunshuName = new Label(this.guiLogic.getSelected().getName());
         tunshuName.setStyle("-fx-font-size: 42");
         tunshuName.setTextFill(Color.WHITE);
 
@@ -335,11 +335,18 @@ public class Main extends Application {
 //        soundMuteTitle.setStyle("-fx-font-size: 12; -fx-font-family: 'Helvetica';");
 
         ToggleGroup soundAndKLightsTGroup = new ToggleGroup();
-        RadioButton muteUnMuteButton = new RadioButton("Sound");
-        RadioButton onOffLightsButton = new RadioButton("Lights ");
+        CheckBox muteUnMuteButton = new CheckBox("Sound");
+        CheckBox onOffLightsButton = new CheckBox("Lights ");
 
-        muteUnMuteButton.setToggleGroup(soundAndKLightsTGroup);
-        onOffLightsButton.setToggleGroup(soundAndKLightsTGroup);
+        muteUnMuteButton.setOnAction(e ->{
+             if(muteUnMuteButton.isSelected()){
+                 this.guiLogic.button(DriveCommands.SetSound, "t");
+             }else {
+                 this.guiLogic.button(DriveCommands.SetSound, "f");
+             }
+        });
+//        muteUnMuteButton.setToggleGroup(soundAndKLightsTGroup);
+//        onOffLightsButton.setToggleGroup(soundAndKLightsTGroup);
 
         soundMuteContainer.getChildren().addAll(muteUnMuteButton, onOffLightsButton);
 
@@ -376,21 +383,19 @@ public class Main extends Application {
         //listView.setFixedCellSize(90);
         //listView.setPadding(new Insets(52,0,0,0));
 
-
         for (Robot bot : this.guiLogic.getRobots()) {
             if (!bot.getName().equals("No robot selected")) {
                 listView.getItems().add(botGUI(bot));
             }
         }
 
-        listView.getItems().add(addBotButton());
-//        this.guiLogic.setSelected(listView.getSelectionModel().getSelectedIndex());
+        listView.getSelectionModel().selectedItemProperty().addListener((ObservableValue) -> this.guiLogic.setSelected(1+listView.getSelectionModel().getSelectedIndex()));
+
 
         Label botListTitle = new Label("Bot List");
         botListTitle.setStyle("-fx-font-size: 15; -fx-font-family: 'Helvetica';");
         botListTitle.setTextFill(Color.WHITE);
         botListTitle.setPadding(new Insets(5, 0, 5, 0));
-
 
         VBox vBox = new VBox();
         vBox.getChildren().add(botListTitle);
@@ -409,7 +414,6 @@ public class Main extends Application {
         leftSideVBoxContainer.getChildren().add(vBox);
         leftSideVBoxContainer.setStyle(" -fx-background-color: #121212");
 
-
         return leftSideVBoxContainer;
     }
 
@@ -425,7 +429,6 @@ public class Main extends Application {
 
         Button addBotBotPhysicalButton = new Button("Add robot");
 
-
         VBox vBox = new VBox();
         vBox.getChildren().add(addBotBotPhysicalButton);
         return vBox;
@@ -435,5 +438,4 @@ public class Main extends Application {
     public void addRobot(String name, String com) {
         this.guiLogic.addRobot(name, com);
     }
-
 }
