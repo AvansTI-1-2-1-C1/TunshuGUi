@@ -1,7 +1,9 @@
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -43,6 +46,39 @@ public class Main extends Application {
         BorderPane mainWindowLayout = new BorderPane();
 
         Scene mainView = new Scene(mainWindowLayout);
+
+        mainView.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            switch (key.getCode()) {
+                case W:
+                    guiLogic.button(DriveCommands.Forward);
+                    break;
+                case A:
+                    guiLogic.button(DriveCommands.Left);
+                    break;
+                case D:
+                    guiLogic.button(DriveCommands.Right);
+                    break;
+                case S:
+                    guiLogic.button(DriveCommands.Backward);
+                    break;
+                case SPACE:
+                    guiLogic.button(DriveCommands.Brake);
+                    break;
+                case H:
+                    guiLogic.button(DriveCommands.Handbrake);
+                    break;
+                case M:
+                    guiLogic.button(DriveCommands.Mute);
+                    break;
+                case L:
+                    guiLogic.button(DriveCommands.LineFollower);
+                    break;
+                    
+                default:
+                    System.out.println(key.getCode().getName());
+                    break;
+            }
+        });
 
         mainView.getStylesheets().add("listView.css");
 
@@ -207,7 +243,7 @@ public class Main extends Application {
 
         centerControlLayout.getChildren().addAll(insideCenterControlLayoutUp, insideCenterControlLayoutDown);
 
-        Label tunshuName = new Label(this.guiLogic.getRobots().get(this.guiLogic.getSelected()).getName());
+        Label tunshuName = new Label(this.guiLogic.getSelected().getName());
         tunshuName.setStyle("-fx-font-size: 42");
         tunshuName.setTextFill(Color.WHITE);
 
@@ -234,19 +270,19 @@ public class Main extends Application {
         } );
         driveLeft.setOnAction(event -> {
             guiLogic.button(DriveCommands.Left);
-        } );
+        });
         driveRight.setOnAction(event -> {
             guiLogic.button(DriveCommands.Right);
-        } );
+        });
         driveBack.setOnAction(event -> {
             guiLogic.button(DriveCommands.Backward);
-        } );
+        });
         brake.setOnAction(event -> {
             guiLogic.button(DriveCommands.Brake);
-        } );
+        });
         emergencyBrake.setOnAction(event -> {
             guiLogic.button(DriveCommands.Handbrake);
-        } );
+        });
         mute.setOnAction(event -> {
             guiLogic.button(DriveCommands.Mute);
         } );
@@ -355,7 +391,7 @@ public class Main extends Application {
         speedSliderTitle.setStyle("-fx-font-size: 13; -fx-font-family: 'Helvetica';");
         speedSliderTitle.setPadding(new Insets(3, 0, 0, 2));
 
-        Slider speedSlider = new Slider(0.0f,1f,0.4);
+        Slider speedSlider = new Slider(0.0f, 1f, 0.4);
         speedSlider.setBlockIncrement(0.2);//WHY TF WONT YOU WORK?
         speedSlider.setShowTickMarks(true);
         speedSlider.setMajorTickUnit(0.1);
@@ -436,21 +472,19 @@ public class Main extends Application {
         //listView.setFixedCellSize(90);
         //listView.setPadding(new Insets(52,0,0,0));
 
-
         for (Robot bot : this.guiLogic.getRobots()) {
             if (!bot.getName().equals("No robot selected")) {
                 listView.getItems().add(botGUI(bot));
             }
         }
 
-        //listView.getItems().add(addBotButton());
-//        this.guiLogic.setSelected(listView.getSelectionModel().getSelectedIndex());
+        listView.getSelectionModel().selectedItemProperty().addListener((ObservableValue) -> this.guiLogic.setSelected(1+listView.getSelectionModel().getSelectedIndex()));
+
 
         Label botListTitle = new Label("Bot List");
         botListTitle.setStyle("-fx-font-size: 15; -fx-font-family: 'Helvetica';");
         botListTitle.setTextFill(Color.WHITE);
         botListTitle.setPadding(new Insets(5, 0, 5, 0));
-
 
         VBox vBox = new VBox();
         vBox.getChildren().add(botListTitle);
@@ -468,7 +502,6 @@ public class Main extends Application {
         leftSideVBoxContainer.setMinWidth(286.0);
         leftSideVBoxContainer.getChildren().add(vBox);
         leftSideVBoxContainer.setStyle(" -fx-background-color: #121212");
-
 
         return leftSideVBoxContainer;
     }
@@ -495,5 +528,4 @@ public class Main extends Application {
     public void addRobot(String name, String com) {
         this.guiLogic.addRobot(name, com);
     }
-
 }

@@ -55,7 +55,7 @@ public class Robot {
 
     public void send(String message) {
         try {
-            serialPort.writeString(message);
+            serialPort.writeString(message.length() + message);
         } catch (SerialPortException ex) {
             System.out.println(ex);
         }
@@ -63,7 +63,7 @@ public class Robot {
 
     public boolean sendStatus(String message) {
         try {
-            serialPort.writeString(message);
+            send(message);
 
             byte[] buffer = serialPort.readBytes(1);
             if (buffer.equals("t")) {

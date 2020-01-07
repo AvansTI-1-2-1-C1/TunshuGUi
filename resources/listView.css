@@ -48,3 +48,7 @@
     -fx-background-color: #1F1826;
     -fx-control-inner-background: #1F1826;
 }
+
+.check-box .box {
+  -fx-background-radius: 10;
+}
