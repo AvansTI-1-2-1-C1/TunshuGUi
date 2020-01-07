@@ -1,13 +1,18 @@
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.application.Application;
 
@@ -15,11 +20,14 @@ public class Main extends Application {
 
     private GuiLogic guiLogic = new GuiLogic();
 
+
     public static void main(String[] args) {
         launch(Main.class);
     }
 
     public void start(Stage stage) {
+
+        GuiLogic guiLogic = new GuiLogic();
 
         //Window characteristics: size/name
         stage.setHeight(600);
@@ -78,18 +86,46 @@ public class Main extends Application {
         insideCenterControlLayoutUp.setMaxSize(484, 242);
         VBox.setMargin(insideCenterControlLayoutUp, new Insets(18, 0, 0, 10));
 
-        HBox informationContainer = new HBox();
+        VBox informationContainer = new VBox();
         informationContainer.setMinSize(230, 242);
         informationContainer.setMaxSize(230, 242);
         informationContainer.setStyle("-fx-background-radius: 10; -fx-background-color: #28202F;");
         informationContainer.setAlignment(Pos.TOP_CENTER);
+
+        VBox containerForInformationTruly = new VBox();
+        containerForInformationTruly.setMinSize(230, 180);
+        containerForInformationTruly.setMaxSize(230, 180);
+        containerForInformationTruly.setAlignment(Pos.TOP_LEFT);
 
         Label informationTitle = new Label("Information");
         informationTitle.setStyle("-fx-font-size: 15; -fx-font-family: 'Helvetica';");
         informationTitle.setTextFill(Color.WHITE);
         informationTitle.setPadding(new Insets(5, 0, 5, 0));
 
-        informationContainer.getChildren().add(informationTitle);
+        Label botName = new Label("Name: Tunshu 001");
+        botName.setStyle("-fx-font-size: 13; -fx-font-family: 'Helvetica';");
+        botName.setTextFill(Color.WHITE);
+        botName.setPadding(new Insets(10, 0, 5, 20));
+
+        Label stateName = new Label("State: ");
+        stateName.setStyle("-fx-font-size: 13; -fx-font-family: 'Helvetica';");
+        stateName.setTextFill(Color.WHITE);
+        stateName.setPadding(new Insets(10, 0, 5, 20));
+
+        Label portName = new Label("Port: COM1");
+        portName.setStyle("-fx-font-size: 13; -fx-font-family: 'Helvetica';");
+        portName.setTextFill(Color.WHITE);
+        portName.setPadding(new Insets(10, 0, 5, 20));
+
+        Label batteryStateName = new Label("Battery: --");
+        batteryStateName.setStyle("-fx-font-size: 13; -fx-font-family: 'Helvetica';");
+        batteryStateName.setTextFill(Color.WHITE);
+        batteryStateName.setPadding(new Insets(10, 0, 5, 20));
+
+        containerForInformationTruly.getChildren().addAll(botName,stateName,portName,batteryStateName);
+
+        informationContainer.getChildren().addAll(informationTitle,containerForInformationTruly);
+
 
         VBox botFunNavContainer = new VBox();
         botFunNavContainer.setMinSize(236, 242);
@@ -113,7 +149,7 @@ public class Main extends Application {
         botFunctionsContainer.getChildren().add(muteUnMuteSound());
         botFunctionsContainer.getChildren().add(speedSlider());
 
-        HBox botNavContainer = new HBox();
+        VBox botNavContainer = new VBox();
         botNavContainer.setMinSize(236, 112);
         botNavContainer.setMaxSize(236, 112);
         botNavContainer.setStyle("-fx-background-radius: 10; -fx-background-color: #28202F;");
@@ -123,9 +159,29 @@ public class Main extends Application {
         Label navigationTitle = new Label("Navigation");
         navigationTitle.setStyle("-fx-font-size: 15; -fx-font-family: 'Helvetica';");
         navigationTitle.setTextFill(Color.WHITE);
-        navigationTitle.setPadding(new Insets(5, 0, 5, 0));
+        navigationTitle.setPadding(new Insets(5, 0, 20, 0));
 
-        botNavContainer.getChildren().add(navigationTitle);
+
+// LINE FOLLOWER BUTTON CREATION & SIZING
+        Button lineFollower = new Button("Drive route");
+        lineFollower.setMinSize(140,35);
+        lineFollower.setMaxSize(140,35);
+        lineFollower.setStyle("-fx-background-color: #1F1826");
+
+        Stage mapSolverStage = new Stage();
+
+        lineFollower.setOnAction(e -> {
+            if(!mapSolverStage.isShowing()) {
+                GuiForMapSolver guiForMapSolver = new GuiForMapSolver(mapSolverStage);
+            }else {
+                mapSolverStage.toFront();
+            }
+        });
+
+        lineFollower.setOnMousePressed(e -> lineFollower.setStyle("-fx-background-color: White; "));
+        lineFollower.setOnMouseReleased(e -> lineFollower.setStyle("-fx-background-color: #1F1826;"));
+
+        botNavContainer.getChildren().addAll(navigationTitle, lineFollower);
 
         HBox insideCenterControlLayoutDown = new HBox();
         insideCenterControlLayoutDown.setMinSize(484, 242);
@@ -155,21 +211,27 @@ public class Main extends Application {
         tunshuName.setStyle("-fx-font-size: 42");
         tunshuName.setTextFill(Color.WHITE);
 
+
+// GRIDPANE HOLDING CONTROL BUTTONS CREATION
         GridPane buttonControlLayout = new GridPane();
 
-        Button driveForward = new Button("");
-        Button driveLeft = new Button("");
-        Button driveRight = new Button("");
-        Button driveBack = new Button("");
-        Button brake = new Button();
+
+// CONTROL BUTTON CREATION
+        Button driveForward = new Button("W");
+        Button driveLeft = new Button("A");
+        Button driveRight = new Button("D");
+        Button driveBack = new Button("S");
+        Button brake = new Button("⎵");
         Button emergencyBrake = new Button();
         Button mute = new Button();
-        Button lineFollower = new Button();
 
+
+// CONTROL BUTTON ACTION WHEN CLICKED
+        // Control button event handlers send commands through to the GuiLogic Class when clicked.
+        // There to be further sent to the robot to control the robots  behaviour.
         driveForward.setOnAction(event -> {
             guiLogic.button(DriveCommands.Forward);
         } );
-
         driveLeft.setOnAction(event -> {
             guiLogic.button(DriveCommands.Left);
         } );
@@ -188,11 +250,25 @@ public class Main extends Application {
         mute.setOnAction(event -> {
             guiLogic.button(DriveCommands.Mute);
         } );
-        lineFollower.setOnAction(event -> {
-            guiLogic.button(DriveCommands.LineFollower);
-        } );
+//        lineFollower.setOnAction(event -> {
+//            guiLogic.button(DriveCommands.LineFollower);
+//        } );
 
-        //#111111 : grey
+
+
+        buttonControlLayout.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.W) {
+                driveForward.setStyle("-fx-background-color: White; ");
+            }
+        });
+//        driveForward.setOnKeyReleased(e -> {
+//            if (e.getCode() == KeyCode.W) {
+//                driveForward.setStyle("-fx-background-color: #1F1826;");
+//            }
+//        });
+
+
+// CONTROL BUTTON BASE COLOR SET
         driveForward.setStyle("-fx-background-color: #1F1826");
         driveLeft.setStyle("-fx-background-color: #1F1826");
         driveRight.setStyle("-fx-background-color: #1F1826");
@@ -200,27 +276,37 @@ public class Main extends Application {
         brake.setStyle("-fx-background-color: #1F1826");
         emergencyBrake.setStyle("-fx-background-color: #DF1D1D");
         mute.setStyle("-fx-background-color: black");
-        lineFollower.setStyle("-fx-background-color: black");
 
-        driveForward.setOnMouseEntered(e -> driveForward.setStyle("-fx-background-color: #242424; "));
-        driveForward.setOnMouseExited(e -> driveForward.setStyle("-fx-background-color: #1F1826;"));
 
-        driveLeft.setOnMouseEntered(e -> driveLeft.setStyle("-fx-background-color: #242424; "));
-        driveLeft.setOnMouseExited(e -> driveLeft.setStyle("-fx-background-color: #1F1826;"));
+// CONTROL BUTTON COLOR ON MOUSE EVENT
+        // Control buttons event handlers that change the color of the button when mouse is over the button in question.
+        // Buttons are:  Forward = W
+        //              Left = D
+        //              Right = A
+        //              Back = S
+        //              Break = SpaceBar
+        driveForward.setOnMousePressed(e -> driveForward.setStyle("-fx-background-color: White; "));
+        driveForward.setOnMouseReleased(e -> driveForward.setStyle("-fx-background-color: #1F1826;"));
 
-        driveRight.setOnMouseEntered(e -> driveRight.setStyle("-fx-background-color: #242424; "));
-        driveRight.setOnMouseExited(e -> driveRight.setStyle("-fx-background-color: #1F1826;"));
+        driveLeft.setOnMousePressed(e -> driveLeft.setStyle("-fx-background-color: White; "));
+        driveLeft.setOnMouseReleased(e -> driveLeft.setStyle("-fx-background-color: #1F1826;"));
 
-        driveBack.setOnMouseEntered(e -> driveBack.setStyle("-fx-background-color: #242424; "));
-        driveBack.setOnMouseExited(e -> driveBack.setStyle("-fx-background-color: #1F1826;"));
+        driveRight.setOnMousePressed(e -> driveRight.setStyle("-fx-background-color: White; "));
+        driveRight.setOnMouseReleased(e -> driveRight.setStyle("-fx-background-color: #1F1826;"));
 
-        brake.setOnMouseEntered(e -> brake.setStyle("-fx-background-color: #242424; "));
-        brake.setOnMouseExited(e -> brake.setStyle("-fx-background-color: #1F1826;"));
+        driveBack.setOnMousePressed(e -> driveBack.setStyle("-fx-background-color: White; "));
+        driveBack.setOnMouseReleased(e -> driveBack.setStyle("-fx-background-color: #1F1826;"));
 
-        //buttonControlLayout.setPadding( new Insets(50,50,50,50) );
+        brake.setOnMousePressed(e -> brake.setStyle("-fx-background-color: White; "));
+        brake.setOnMouseReleased(e -> brake.setStyle("-fx-background-color: #1F1826;"));
+
+
+// CONTROL BUTTONs LAYOUT SPACING SET
         buttonControlLayout.setHgap(10.0);
         buttonControlLayout.setVgap(10.0);
 
+
+// CONTROL BUTTONs SIZE SET
         driveForward.setMinSize(60.0, 60.0);
         driveLeft.setMinSize(60.0, 60.0);
         driveRight.setMinSize(60.0, 60.0);
@@ -230,33 +316,35 @@ public class Main extends Application {
 
         emergencyBrake.setMinSize(70.0, 70.0);
         mute.setMinSize(70.0, 70.0);
-        lineFollower.setMinSize(70.0, 70.0);
 
+
+// CONTROL BUTTONs ADDED TO BUTTON LAYOUT GRID
         buttonControlLayout.add(driveForward, 1, 0);
         buttonControlLayout.add(driveLeft, 0, 1);
         buttonControlLayout.add(driveRight, 2, 1);
         buttonControlLayout.add(driveBack, 1, 1);
         buttonControlLayout.add(brake, 4, 1, 3, 1);
 //        buttonControlLayout.add(emergencyBrake,0,8);
-//        buttonControlLayout.add(lineFollower,1,8);
-//        buttonControlLayout.add(mute,2,8);
 
         buttonControlLayout.setHalignment(emergencyBrake, HPos.CENTER);
-        buttonControlLayout.setHalignment(lineFollower, HPos.CENTER);
+        //buttonControlLayout.setHalignment(lineFollower, HPos.CENTER);
         buttonControlLayout.setHalignment(mute, HPos.CENTER);
 
         buttonControlLayout.setPadding(new Insets(35, 0, 0, 0));
 
-        //centerControlLayout.setTop(tunshuName);
         bottomControlContainer.getChildren().add(buttonControlLayout);
-        //centerControlLayout.setCenter(bottomControlContainer);
-
-        //centerControlLayout.getChildren().addAll(informationContainer, botFunctionsContainer, botNavContainer, bottomControlContainer);
 
         return centerControlLayout;
-
     }
 
+    /**
+     * GUI NODE FOR THE ROBOT SPEED SLIDER
+     *
+     * Slider is created.
+     * Slider sends values through to the GuiLogic class to be further sent to the robot, changing its driving speed.
+     *
+     * @return
+     */
     private Node speedSlider() {
 
         HBox speedSliderContainer = new HBox();
@@ -289,6 +377,14 @@ public class Main extends Application {
         return speedSliderContainer;
     }
 
+    /**
+     * SOUND AND LIGHT TOGGLES
+     *
+     * Both toggles are created.
+     * Radio buttons send their value through to the GuiLogic class to be further sent to the robot, changing the state of its sound and/or light.
+     *
+     * @return
+     */
     private Node muteUnMuteSound() {
 
         VBox soundMuteContainer = new VBox();
@@ -297,13 +393,13 @@ public class Main extends Application {
 //        Label soundMuteTitle = new Label("Sound");
 //        soundMuteTitle.setTextFill(Color.WHITE);
 //        soundMuteTitle.setStyle("-fx-font-size: 12; -fx-font-family: 'Helvetica';");
-
-        ToggleGroup soundAndKLightsTGroup = new ToggleGroup();
+        ToggleGroup soundSetting = new ToggleGroup();
+        ToggleGroup lightsSetting = new ToggleGroup();
         RadioButton muteUnMuteButton = new RadioButton("Sound");
         RadioButton onOffLightsButton = new RadioButton("Lights ");
 
-        muteUnMuteButton.setToggleGroup(soundAndKLightsTGroup);
-        onOffLightsButton.setToggleGroup(soundAndKLightsTGroup);
+        muteUnMuteButton.setToggleGroup(soundSetting);
+        onOffLightsButton.setToggleGroup(lightsSetting);
 
         soundMuteContainer.getChildren().addAll(muteUnMuteButton, onOffLightsButton);
 
@@ -347,7 +443,7 @@ public class Main extends Application {
             }
         }
 
-        listView.getItems().add(addBotButton());
+        //listView.getItems().add(addBotButton());
 //        this.guiLogic.setSelected(listView.getSelectionModel().getSelectedIndex());
 
         Label botListTitle = new Label("Bot List");
@@ -385,16 +481,16 @@ public class Main extends Application {
         return vBox;
     }
 
-    private Node addBotButton(){
-
-        Button addBotBotPhysicalButton = new Button("Add robot");
-
-
-        VBox vBox = new VBox();
-        vBox.getChildren().add(addBotBotPhysicalButton);
-        return vBox;
-
-    }
+//    private Node addBotButton(){
+//
+//        Button addBotBotPhysicalButton = new Button("Add robot");
+//
+//
+//        VBox vBox = new VBox();
+//        vBox.getChildren().add(addBotBotPhysicalButton);
+//        return vBox;
+//
+//    }
 
     public void addRobot(String name, String com) {
         this.guiLogic.addRobot(name, com);
