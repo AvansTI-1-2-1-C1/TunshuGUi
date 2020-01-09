@@ -54,6 +54,7 @@ public class Robot {
     }
 
     public void send(String message) {
+        System.out.println(message);
         try {
             serialPort.writeString(message.length() + message);
         } catch (SerialPortException ex) {

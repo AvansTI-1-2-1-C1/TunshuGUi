@@ -51,4 +51,8 @@
 
 .check-box .box {
   -fx-background-radius: 10;
+  -fx-background-color: #1F1826;
+  -fx-border-color: #1F1826;
+  -fx-background-image: null;
+  -fx-border-radius: 20px;
 }

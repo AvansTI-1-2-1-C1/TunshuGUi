@@ -1,3 +1,5 @@
+import Enums.DriveCommands;
+
 import java.util.ArrayList;
 
 public class GuiLogic {
@@ -10,7 +12,7 @@ public class GuiLogic {
         this.robots = new ArrayList<>();
         addRobot("No robot selected", 999);
         addRobot("Bot 4", 4);
-        addRobot("Bot 2", 6);
+        addRobot("Bot 2", 8);
         this.selected = robots.get(1);
     }
 
@@ -23,9 +25,10 @@ public class GuiLogic {
     }
 
     public void speedSetting( Number speed ){
-        this.selected.send("o");
-         System.out.println(speed);
-         button(DriveCommands.SetSpeed, speed.toString());
+        int intSpeed = (int)(speed.doubleValue() * 100);
+
+        System.out.println(intSpeed);
+        button(DriveCommands.SetSpeed, ""+intSpeed);
 //        this.robots.get(selected).send(speed.toString());
     }
 
@@ -83,11 +86,7 @@ public class GuiLogic {
         switch (command) {
             //Set speed(o)
             case SetSpeed:
-                if (value.equals("t")){
-                    this.selected.send("ot");
-                }else if (value.equals("f")){
-                    this.selected.send("of");
-                }
+                this.selected.send("o" + value);
                 break;
             //Set Light state(l)
             case SetLight:
@@ -104,6 +103,9 @@ public class GuiLogic {
                 }else if (value.equals("f")){
                     this.selected.send("pf");
                 }
+                break;
+            case RouteFollower:
+                this.selected.send("");
                 break;
             //All other keys
             default:

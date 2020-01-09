@@ -1,3 +1,5 @@
+package Enums;
+
 public enum DriveCommands {
     None,
     Forward,
@@ -15,5 +17,6 @@ public enum DriveCommands {
     SetLight,
     GetLight,
     SetSound,
-    GetSound
+    GetSound,
+    RouteFollower
 }

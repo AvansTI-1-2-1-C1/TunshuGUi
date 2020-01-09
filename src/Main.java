@@ -1,9 +1,7 @@
+import Enums.DriveCommands;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,16 +10,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.application.Application;
 
-public class Main extends Application {
+public class Main extends Application implements RouteCallBack{
 
     private GuiLogic guiLogic = new GuiLogic();
+    private Label botName;
+    private Label stateName;
+    private Label portName;
 
 
     public static void main(String[] args) {
@@ -29,8 +28,6 @@ public class Main extends Application {
     }
 
     public void start(Stage stage) {
-
-        GuiLogic guiLogic = new GuiLogic();
 
         //Window characteristics: size/name
         stage.setHeight(600);
@@ -73,7 +70,10 @@ public class Main extends Application {
                 case L:
                     guiLogic.button(DriveCommands.LineFollower);
                     break;
-                    
+                case ESCAPE:
+                    Platform.exit();
+                    System.exit(0);
+                    break;
                 default:
                     System.out.println(key.getCode().getName());
                     break;
@@ -138,17 +138,17 @@ public class Main extends Application {
         informationTitle.setTextFill(Color.WHITE);
         informationTitle.setPadding(new Insets(5, 0, 5, 0));
 
-        Label botName = new Label("Name: Tunshu 001");
+        botName = new Label("Name: " + this.guiLogic.getSelected().getName());
         botName.setStyle("-fx-font-size: 13; -fx-font-family: 'Helvetica';");
         botName.setTextFill(Color.WHITE);
         botName.setPadding(new Insets(10, 0, 5, 20));
 
-        Label stateName = new Label("State: ");
+        stateName = new Label("State: " + this.guiLogic.getSelected().getStatus());
         stateName.setStyle("-fx-font-size: 13; -fx-font-family: 'Helvetica';");
         stateName.setTextFill(Color.WHITE);
         stateName.setPadding(new Insets(10, 0, 5, 20));
 
-        Label portName = new Label("Port: COM1");
+        portName = new Label("Port: " + this.guiLogic.getSelected().getPort());
         portName.setStyle("-fx-font-size: 13; -fx-font-family: 'Helvetica';");
         portName.setTextFill(Color.WHITE);
         portName.setPadding(new Insets(10, 0, 5, 20));
@@ -159,7 +159,6 @@ public class Main extends Application {
         batteryStateName.setPadding(new Insets(10, 0, 5, 20));
 
         containerForInformationTruly.getChildren().addAll(botName,stateName,portName,batteryStateName);
-
         informationContainer.getChildren().addAll(informationTitle,containerForInformationTruly);
 
 
@@ -208,7 +207,7 @@ public class Main extends Application {
 
         lineFollower.setOnAction(e -> {
             if(!mapSolverStage.isShowing()) {
-                GuiForMapSolver guiForMapSolver = new GuiForMapSolver(mapSolverStage);
+                GuiForMapSolver guiForMapSolver = new GuiForMapSolver(mapSolverStage, this);
             }else {
                 mapSolverStage.toFront();
             }
@@ -287,7 +286,7 @@ public class Main extends Application {
             guiLogic.button(DriveCommands.Mute);
         } );
 //        lineFollower.setOnAction(event -> {
-//            guiLogic.button(DriveCommands.LineFollower);
+//            guiLogic.button(Enums.DriveCommands.LineFollower);
 //        } );
 
 
@@ -478,7 +477,12 @@ public class Main extends Application {
             }
         }
 
-        listView.getSelectionModel().selectedItemProperty().addListener((ObservableValue) -> this.guiLogic.setSelected(1+listView.getSelectionModel().getSelectedIndex()));
+        listView.getSelectionModel().selectedItemProperty().addListener((ObservableValue) -> {
+            this.guiLogic.setSelected(1+listView.getSelectionModel().getSelectedIndex());
+            botName.setText("Name: " + this.guiLogic.getSelected().getName());
+            stateName.setText("State: " + this.guiLogic.getSelected().getStatus());
+            portName.setText("Port: " + this.guiLogic.getSelected().getPort());
+        });
 
 
         Label botListTitle = new Label("Bot List");
@@ -527,5 +531,10 @@ public class Main extends Application {
 
     public void addRobot(String name, String com) {
         this.guiLogic.addRobot(name, com);
+    }
+
+    @Override
+    public void sendRoute(String route) {
+        this.guiLogic.getSelected().send("");
     }
 }
