@@ -76,7 +76,7 @@ public class MapSolver implements Updatable {
 
     /**
      * this function solves the map if it is solvable
-     * this is done using the TODO
+     * this is done using the Dijkstra method
      * we give every intersection an value how far away from the start it is
      * the state changes if the end conditions are met and these are when there is no valid path or the end has been reached
      */

@@ -1,5 +1,8 @@
 import jssc.SerialPort;
+import jssc.SerialPortEvent;
 import jssc.SerialPortException;
+
+import java.awt.*;
 
 public class Robot {
 
@@ -11,9 +14,7 @@ public class Robot {
     private int stopbits;
     private int parity;
     private String currentTask;
-    private boolean muted;
-    private boolean lightsOn;
-    private float speed;
+    private boolean isInit;
 
 
     public Robot(String name, String com) {
@@ -25,8 +26,7 @@ public class Robot {
         this.parity = 0;
         this.status = 0;
         this.currentTask = "--";
-        this.muted = getStateComponents(1);
-        this.muted = getStateComponents(2);
+        this.isInit = false;
     }
 
     public Robot(String name, int com) {
@@ -36,20 +36,22 @@ public class Robot {
         this.databits = 8;
         this.stopbits = 1;
         this.parity = 0;
-
-        if(com != 999){
-            System.out.println("init");
-            init();
-        }
     }
 
     public void init() {
+        System.out.println("Init");
         try {
-            this.serialPort.openPort();
-            System.out.println();
-            this.serialPort.setParams(this.baudrate, this.databits, this.stopbits, this.parity);
+            if(!isInit) {
+                this.serialPort.openPort();
+                System.out.println();
+                this.serialPort.setParams(this.baudrate, this.databits, this.stopbits, this.parity);
+                this.isInit = true;
+                System.out.println("Done");
+            }
         } catch (SerialPortException e) {
             System.out.println(e);
+            this.isInit = false;
+            System.out.println("Error");
         }
     }
 

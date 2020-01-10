@@ -70,6 +70,12 @@ public class Main extends Application implements RouteCallBack{
                 case L:
                     guiLogic.button(DriveCommands.LineFollower);
                     break;
+                case E:
+                    guiLogic.button(DriveCommands.Faster);
+                    break;
+                case Q:
+                    guiLogic.button(DriveCommands.Slower);
+                    break;
                 case ESCAPE:
                     Platform.exit();
                     System.exit(0);
@@ -399,12 +405,9 @@ public class Main extends Application implements RouteCallBack{
 
         speedSlider.setPadding(new Insets(3, 0, 0, 5));
 
-        speedSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                guiLogic.speedSetting(newValue);
-                System.out.println(newValue);
-            }
+        speedSlider.setOnMouseReleased(event -> {
+            guiLogic.speedSetting(speedSlider.getValue());
+            System.out.println(speedSlider.getValue());
         });
 
         speedSliderContainer.getChildren().addAll(speedSliderTitle, speedSlider);
@@ -428,13 +431,24 @@ public class Main extends Application implements RouteCallBack{
 //        Label soundMuteTitle = new Label("Sound");
 //        soundMuteTitle.setTextFill(Color.WHITE);
 //        soundMuteTitle.setStyle("-fx-font-size: 12; -fx-font-family: 'Helvetica';");
-        ToggleGroup soundSetting = new ToggleGroup();
-        ToggleGroup lightsSetting = new ToggleGroup();
         RadioButton muteUnMuteButton = new RadioButton("Sound");
         RadioButton onOffLightsButton = new RadioButton("Lights ");
 
-        muteUnMuteButton.setToggleGroup(soundSetting);
-        onOffLightsButton.setToggleGroup(lightsSetting);
+        muteUnMuteButton.selectedProperty().addListener(ChangeListener->{
+            if (muteUnMuteButton.isSelected()){
+                this.guiLogic.getSelected().send("pt");
+            }else {
+                this.guiLogic.getSelected().send("pf");
+            }
+        });
+
+        onOffLightsButton.selectedProperty().addListener(ChangeListener->{
+            if (onOffLightsButton.isSelected()){
+                this.guiLogic.getSelected().send("lt");
+            }else {
+                this.guiLogic.getSelected().send("lf");
+            }
+        });
 
         soundMuteContainer.getChildren().addAll(muteUnMuteButton, onOffLightsButton);
 
@@ -479,6 +493,7 @@ public class Main extends Application implements RouteCallBack{
 
         listView.getSelectionModel().selectedItemProperty().addListener((ObservableValue) -> {
             this.guiLogic.setSelected(1+listView.getSelectionModel().getSelectedIndex());
+            this.guiLogic.getSelected().init();
             botName.setText("Name: " + this.guiLogic.getSelected().getName());
             stateName.setText("State: " + this.guiLogic.getSelected().getStatus());
             portName.setText("Port: " + this.guiLogic.getSelected().getPort());
@@ -535,6 +550,6 @@ public class Main extends Application implements RouteCallBack{
 
     @Override
     public void sendRoute(String route) {
-        this.guiLogic.getSelected().send("");
+        this.guiLogic.getSelected().send("i" + route);
     }
 }

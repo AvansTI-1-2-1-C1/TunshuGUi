@@ -36,7 +36,6 @@ public class GuiLogic {
         switch (command) {
             //Forward(w)
             case Forward:
-                System.out.println('w');
                 this.selected.send("w");
                 break;
             //Backwards(s)
@@ -105,7 +104,7 @@ public class GuiLogic {
                 }
                 break;
             case RouteFollower:
-                this.selected.send("");
+                this.selected.send("i");
                 break;
             //All other keys
             default:

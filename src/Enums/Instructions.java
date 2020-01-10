@@ -5,5 +5,6 @@ public enum Instructions {
     Left,
     Forward,
     Backward,
+    Stop,
     None
 }
