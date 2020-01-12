@@ -66,7 +66,6 @@ public class MapSolver implements Updatable {
                 break;
             case Done:
                 //we know the path can be driven
-                System.out.println(this.instructions);
                 break;
             case Nothing:
                 //the state is nothing because the function solve map hasn't been called or the map cant be completed
@@ -76,7 +75,7 @@ public class MapSolver implements Updatable {
 
     /**
      * this function solves the map if it is solvable
-     * this is done using the Dijkstra method
+     * this is done using the dijkstra map solving algorithm
      * we give every intersection an value how far away from the start it is
      * the state changes if the end conditions are met and these are when there is no valid path or the end has been reached
      */
@@ -137,7 +136,7 @@ public class MapSolver implements Updatable {
         map[currentX][currentY].setVisited(true);
 
         //the end condition is if the end point has been reached
-        if (map[endX][endY].isVisited()){
+        if (map[endX][endY].isVisited()) {
             this.state = MapSolverState.CreatingPath;
             return;
         }
@@ -186,7 +185,7 @@ public class MapSolver implements Updatable {
         }
 
         int smallestTentativeDistance = Integer.MAX_VALUE;
-        //make sure the variable is not unsigned
+        //make sure the variable is signed
         WindDirections gotoDirection = WindDirections.North;
 
         //check all the directions for the lowest tentative distance
@@ -236,14 +235,13 @@ public class MapSolver implements Updatable {
             }
 
             //make sure the correct route is followed otherwise we stop and set the state to nothing so we know it didnt complete
-            if (smallestTentativeDistance==Integer.MAX_VALUE)
+            if (smallestTentativeDistance == Integer.MAX_VALUE)
                 this.state = MapSolverState.Nothing;
         }
 
 
-
         //goto the goto directions x and y
-        switch (gotoDirection){
+        switch (gotoDirection) {
             case North:
                 currentY--;
                 break;
@@ -265,15 +263,13 @@ public class MapSolver implements Updatable {
             this.directionsNESWFromStart = (ArrayList<WindDirections>) this.directionsNESWFromEnd.clone();
             Collections.reverse(directionsNESWFromStart);
             directionsNESWFromStart = reverseNESW(directionsNESWFromStart);
-
-
-            this.instructions = converterFromWindDirectionsToInstructions(directionsNESWFromStart,lastWindDirection);
+            this.instructions = converterFromWindDirectionsToInstructions(directionsNESWFromStart, lastWindDirection);
             this.firstCall = true;
             this.state = MapSolverState.Done;
 
             try {
                 lastWindDirection = directionsNESWFromEnd.get(0);
-            }catch (Exception ignored){
+            } catch (Exception ignored) {
                 System.out.println("no directions");
             }
         }
@@ -281,22 +277,22 @@ public class MapSolver implements Updatable {
     }
 
     private WindDirections reverseNESW(WindDirections direction) {
-        HashMap<WindDirections,WindDirections> reverse = new HashMap<>();
-        reverse.put(WindDirections.North,WindDirections.South);
-        reverse.put(WindDirections.East,WindDirections.West);
-        reverse.put(WindDirections.South,WindDirections.North);
-        reverse.put(WindDirections.West,WindDirections.East);
+        HashMap<WindDirections, WindDirections> reverse = new HashMap<>();
+        reverse.put(WindDirections.North, WindDirections.South);
+        reverse.put(WindDirections.East, WindDirections.West);
+        reverse.put(WindDirections.South, WindDirections.North);
+        reverse.put(WindDirections.West, WindDirections.East);
         return reverse.get(direction);
     }
 
     private ArrayList<WindDirections> reverseNESW(ArrayList<WindDirections> directionsNESWFromStart) {
-        HashMap<WindDirections,WindDirections> reverse = new HashMap<>();
-        reverse.put(WindDirections.North,WindDirections.South);
-        reverse.put(WindDirections.East,WindDirections.West);
-        reverse.put(WindDirections.South,WindDirections.North);
-        reverse.put(WindDirections.West,WindDirections.East);
+        HashMap<WindDirections, WindDirections> reverse = new HashMap<>();
+        reverse.put(WindDirections.North, WindDirections.South);
+        reverse.put(WindDirections.East, WindDirections.West);
+        reverse.put(WindDirections.South, WindDirections.North);
+        reverse.put(WindDirections.West, WindDirections.East);
         ArrayList<WindDirections> temp = new ArrayList<>();
-        for (WindDirections direction: directionsNESWFromStart){
+        for (WindDirections direction : directionsNESWFromStart) {
             temp.add(reverse.get(direction));
         }
         return temp;
@@ -341,18 +337,18 @@ public class MapSolver implements Updatable {
      * @return ArrayList with Enums.Instructions
      */
     public static ArrayList<Instructions> converterFromWindDirectionsToInstructions(ArrayList<WindDirections> directionsNESW) {
-        return converterFromWindDirectionsToInstructions(directionsNESW,WindDirections.North);
+        return converterFromWindDirectionsToInstructions(directionsNESW, WindDirections.North);
     }
 
     /**
      * this method converts NESW directions to instructions
      * this method is being overloaded
      *
-     * @param directionsNESW ArrayList with directions
+     * @param directionsNESW  ArrayList with directions
      * @param facingDirection is the direction the car is facing
      * @return ArrayList with Enums.Instructions
      */
-    public static ArrayList<Instructions> converterFromWindDirectionsToInstructions(ArrayList<WindDirections> directionsNESW,WindDirections facingDirection) {
+    public static ArrayList<Instructions> converterFromWindDirectionsToInstructions(ArrayList<WindDirections> directionsNESW, WindDirections facingDirection) {
         ArrayList<Instructions> instructions = new ArrayList<>();
         for (WindDirections direction : directionsNESW) {
             if (facingDirection == WindDirections.North) {
@@ -372,7 +368,7 @@ public class MapSolver implements Updatable {
                     facingDirection = WindDirections.East;
                     //wait for next intersection
 
-                }else if (direction != WindDirections.South){
+                } else if (direction == WindDirections.South) {
                     //turn back
                     instructions.add(Instructions.Backward);
                     facingDirection = WindDirections.South;
@@ -397,12 +393,11 @@ public class MapSolver implements Updatable {
                     facingDirection = WindDirections.North;
                     //wait for next intersection
 
-                }else if (direction != WindDirections.West){
+                } else if (direction == WindDirections.West) {
                     //turn back
                     instructions.add(Instructions.Backward);
                     facingDirection = WindDirections.West;
                     //wait for next intersection
-
                 }
             } else if (facingDirection == WindDirections.South) {
                 if (direction == WindDirections.South) {
@@ -422,7 +417,7 @@ public class MapSolver implements Updatable {
                     facingDirection = WindDirections.East;
                     //wait for next intersection
 
-                }else if (direction != WindDirections.North){
+                } else if (direction == WindDirections.North) {
                     //turn back
                     instructions.add(Instructions.Backward);
                     facingDirection = WindDirections.North;
@@ -447,7 +442,7 @@ public class MapSolver implements Updatable {
                     facingDirection = WindDirections.South;
                     //wait for next intersection
 
-                }else if (direction != WindDirections.East){
+                } else if (direction == WindDirections.East) {
                     //turn back
                     instructions.add(Instructions.Backward);
                     facingDirection = WindDirections.East;
@@ -496,13 +491,13 @@ public class MapSolver implements Updatable {
      * @param map new map that will be used to make a route
      */
     public void setMap(Intersection[][] map) {
-setMap(map,WindDirections.North);
+        setMap(map, WindDirections.North);
     }
 
     /**
      * this function resets the mapsolver and makes the parameter the new map
      *
-     * @param map new map that will be used to make a route
+     * @param map               new map that will be used to make a route
      * @param lastWindDirection last facing direction
      */
     public void setMap(Intersection[][] map, WindDirections lastWindDirection) {
@@ -528,6 +523,7 @@ setMap(map,WindDirections.North);
         this.lastWindDirection = lastWindDirection;
         this.directionsNESWFromEnd = new ArrayList<>();
         this.directionsNESWFromStart = new ArrayList<>();
+        this.instructions = new ArrayList<>();
         this.map = map;
         this.firstCall = true;
     }

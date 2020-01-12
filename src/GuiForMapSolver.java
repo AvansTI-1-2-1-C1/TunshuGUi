@@ -39,7 +39,7 @@ public class GuiForMapSolver  extends Application {
             start(this.stage);
         }catch (Exception exception){
             if (isDebugEnabled)
-                System.out.println(exception);
+                System.out.println("Creating map solver gui: "+exception);
         }
     }
 
@@ -112,21 +112,21 @@ public class GuiForMapSolver  extends Application {
             if (throughXY[0] != -1)
                 throughEnablad = true;
 
-//            //information to show the user what was selected
-//            {
-//                if (isDebugEnabled) {
-//                    System.out.println("starting point: (" + startingXY[0] + "," + startingXY[1] + ")");
-//                    if (throughEnablad) {
-//                        System.out.println("through point: (" + throughXY[0] + "," + throughXY[1] + ")");
-//                    }
-//                    System.out.println("ending point: (" + endingXY[0] + "," + endingXY[1] + ")");
-//                    System.out.print("blockades: ");
-//                    for (int[] b : blockades) {
-//                        System.out.printf("(%d,%d)", b[0], b[1]);
-//                    }
-//                    System.out.println();
-//                }
-//            }
+            //information to show the user what was selected
+            {
+                if (isDebugEnabled) {
+                    System.out.println("starting point: (" + startingXY[0] + "," + startingXY[1] + ")");
+                    if (throughEnablad) {
+                        System.out.println("through point: (" + throughXY[0] + "," + throughXY[1] + ")");
+                    }
+                    System.out.println("ending point: (" + endingXY[0] + "," + endingXY[1] + ")");
+                    System.out.print("blockades: ");
+                    for (int[] b : blockades) {
+                        System.out.printf("(%d,%d)", b[0], b[1]);
+                    }
+                    System.out.println();
+                }
+            }
 
             //the enabling of the map solver
             mapObject.setMap(MapSolver.makeMap(mapWidthHeight[0], mapWidthHeight[1]));
@@ -164,7 +164,6 @@ public class GuiForMapSolver  extends Application {
                         if (throughEnablad) {
                             instructions.addAll(mapObject.getInstructions());
                             instructions.add(Instructions.Stop);
-                            System.out.println(instructions);
                             WindDirections lastFacingDirection = mapObject.getLastDirection();
                             mapObject.setMap(MapSolver.makeMap(mapWidthHeight[0], mapWidthHeight[1]), lastFacingDirection);
                             mapObject.enableMapSolve(throughXY[0], throughXY[1], endingXY[0], endingXY[1]);
@@ -432,7 +431,7 @@ public class GuiForMapSolver  extends Application {
                 button_delete.setOnAction(delete -> {
                     File deletableFile = (File) comboBox.getValue();
                     if (isDebugEnabled) {
-                        System.out.println(deletableFile.delete());
+                        System.out.println("File is deleted:"+deletableFile.delete());
                     } else {
                         deletableFile.delete();
                     }
