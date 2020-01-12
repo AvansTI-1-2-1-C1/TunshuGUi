@@ -21,6 +21,7 @@ public class Main extends Application implements RouteCallBack{
     private Label botName;
     private Label stateName;
     private Label portName;
+    private final String buttonStyle = "-fx-background-color: #1F1826; -fx-text-fill: white;";
 
 
     public static void main(String[] args) {
@@ -207,7 +208,9 @@ public class Main extends Application implements RouteCallBack{
         Button lineFollower = new Button("Drive route");
         lineFollower.setMinSize(140,35);
         lineFollower.setMaxSize(140,35);
-        lineFollower.setStyle("-fx-background-color: #1F1826");
+        lineFollower.setStyle(this.buttonStyle);
+        lineFollower.setOnMousePressed(e -> lineFollower.setStyle("-fx-background-color: White; "));
+        lineFollower.setOnMouseReleased(e -> lineFollower.setStyle(this.buttonStyle));
 
         Stage mapSolverStage = new Stage();
 
@@ -297,11 +300,11 @@ public class Main extends Application implements RouteCallBack{
 
 
 
-        buttonControlLayout.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.W) {
-                driveForward.setStyle("-fx-background-color: White; ");
-            }
-        });
+//        buttonControlLayout.setOnKeyPressed(e -> {
+//            if (e.getCode() == KeyCode.W) {
+//                driveForward.setStyle("-fx-background-color: White; ");
+//            }
+//        });
 //        driveForward.setOnKeyReleased(e -> {
 //            if (e.getCode() == KeyCode.W) {
 //                driveForward.setStyle("-fx-background-color: #1F1826;");
@@ -310,13 +313,13 @@ public class Main extends Application implements RouteCallBack{
 
 
 // CONTROL BUTTON BASE COLOR SET
-        driveForward.setStyle("-fx-background-color: #1F1826");
-        driveLeft.setStyle("-fx-background-color: #1F1826");
-        driveRight.setStyle("-fx-background-color: #1F1826");
-        driveBack.setStyle("-fx-background-color: #1F1826");
-        brake.setStyle("-fx-background-color: #1F1826");
-        emergencyBrake.setStyle("-fx-background-color: #DF1D1D");
-        mute.setStyle("-fx-background-color: black");
+        driveForward.setStyle(this.buttonStyle);
+        driveLeft.setStyle(this.buttonStyle);
+        driveRight.setStyle(this.buttonStyle);
+        driveBack.setStyle(this.buttonStyle);
+        brake.setStyle(this.buttonStyle);
+        emergencyBrake.setStyle(this.buttonStyle);
+        mute.setStyle(this.buttonStyle);
 
 
 // CONTROL BUTTON COLOR ON MOUSE EVENT
@@ -327,19 +330,19 @@ public class Main extends Application implements RouteCallBack{
         //              Back = S
         //              Break = SpaceBar
         driveForward.setOnMousePressed(e -> driveForward.setStyle("-fx-background-color: White; "));
-        driveForward.setOnMouseReleased(e -> driveForward.setStyle("-fx-background-color: #1F1826;"));
+        driveForward.setOnMouseReleased(e -> driveForward.setStyle(this.buttonStyle));
 
         driveLeft.setOnMousePressed(e -> driveLeft.setStyle("-fx-background-color: White; "));
-        driveLeft.setOnMouseReleased(e -> driveLeft.setStyle("-fx-background-color: #1F1826;"));
+        driveLeft.setOnMouseReleased(e -> driveLeft.setStyle(this.buttonStyle));
 
         driveRight.setOnMousePressed(e -> driveRight.setStyle("-fx-background-color: White; "));
-        driveRight.setOnMouseReleased(e -> driveRight.setStyle("-fx-background-color: #1F1826;"));
+        driveRight.setOnMouseReleased(e -> driveRight.setStyle(this.buttonStyle));
 
         driveBack.setOnMousePressed(e -> driveBack.setStyle("-fx-background-color: White; "));
-        driveBack.setOnMouseReleased(e -> driveBack.setStyle("-fx-background-color: #1F1826;"));
+        driveBack.setOnMouseReleased(e -> driveBack.setStyle(this.buttonStyle));
 
         brake.setOnMousePressed(e -> brake.setStyle("-fx-background-color: White; "));
-        brake.setOnMouseReleased(e -> brake.setStyle("-fx-background-color: #1F1826;"));
+        brake.setOnMouseReleased(e -> brake.setStyle(this.buttonStyle));
 
 
 // CONTROL BUTTONs LAYOUT SPACING SET

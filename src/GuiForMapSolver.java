@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.Scanner;
 
 
-public class GuiForMapSolver  extends Application {
+public class GuiForMapSolver extends Application {
     private final String mapColorNormal = "-fx-background-color: #b4b4b4";
     private final String mapColorStart = "-fx-background-color: #00ff0b";
     private final String mapColorEnd = "-fx-background-color: #ff0025";
@@ -24,6 +24,7 @@ public class GuiForMapSolver  extends Application {
     private final String mapColorPath = "-fx-background-color: #3c4296";
     private final String mapColorBlockade = "-fx-background-color: #000000";
     private final String mapColorThrough = "-fx-background-color: #ff6a00";
+    private final String buttonStyle = "-fx-background-color: #1F1826; -fx-text-fill: white;";
 
     private ArrayList<Instructions> instructions;
     private RouteCallBack routeCallBack;
@@ -33,13 +34,13 @@ public class GuiForMapSolver  extends Application {
 
 
     public GuiForMapSolver(Stage stage, RouteCallBack route) {
-        try{
+        try {
             this.stage = stage;
             this.routeCallBack = route;
             start(this.stage);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             if (isDebugEnabled)
-                System.out.println("Creating map solver gui: "+exception);
+                System.out.println("Creating map solver gui: " + exception);
         }
     }
 
@@ -78,9 +79,40 @@ public class GuiForMapSolver  extends Application {
         hBoxButtons1.setAlignment(Pos.CENTER);
         hBoxButtons1.setSpacing(20);
         hBoxButtons1.setPrefHeight(30);
-        hBoxButtons2.getChildren().addAll(select_run, select_reset, select_save, select_load, select_configure, select_send,select_back);
+        hBoxButtons2.getChildren().addAll(select_run, select_reset, select_save, select_load, select_configure, select_send, select_back);
         hBoxButtons2.setAlignment(Pos.CENTER);
         hBoxButtons2.setSpacing(10);
+
+        select_back.setOnMousePressed(e -> select_back.setStyle("-fx-background-color: White; "));
+        select_back.setOnMouseReleased(e -> select_back.setStyle(this.buttonStyle));
+
+        select_run.setOnMousePressed(e -> select_run.setStyle("-fx-background-color: White; "));
+        select_run.setOnMouseReleased(e -> select_run.setStyle(this.buttonStyle));
+
+        select_reset.setOnMousePressed(e -> select_reset.setStyle("-fx-background-color: White; "));
+        select_reset.setOnMouseReleased(e -> select_reset.setStyle(this.buttonStyle));
+
+        select_configure.setOnMousePressed(e -> select_configure.setStyle("-fx-background-color: White; "));
+        select_configure.setOnMouseReleased(e -> select_configure.setStyle(this.buttonStyle));
+
+        select_save.setOnMousePressed(e -> select_save.setStyle("-fx-background-color: White; "));
+        select_save.setOnMouseReleased(e -> select_save.setStyle(this.buttonStyle));
+
+        select_load.setOnMousePressed(e -> select_load.setStyle("-fx-background-color: White; "));
+        select_load.setOnMouseReleased(e -> select_load.setStyle(this.buttonStyle));
+
+        select_send.setOnMousePressed(e -> select_load.setStyle("-fx-background-color: White; "));
+        select_send.setOnMouseReleased(e -> select_load.setStyle(this.buttonStyle));
+
+        select_back.setStyle(this.buttonStyle);
+        select_run.setStyle(this.buttonStyle);
+        select_reset.setStyle(this.buttonStyle);
+        select_configure.setStyle(this.buttonStyle);
+        select_save.setStyle(this.buttonStyle);
+        select_load.setStyle(this.buttonStyle);
+        select_send.setStyle(this.buttonStyle);
+
+        vBoxMenu.setStyle("-fx-background-color: #28202F");
 
         vBoxMenu.getChildren().addAll(hBoxButtons1, hBoxButtons2);
 
@@ -210,6 +242,7 @@ public class GuiForMapSolver  extends Application {
             HBox hBoxButtons = new HBox(saveButton, cancelButton);
             saveWindow.getChildren().addAll(hBoxText, hBoxButtons);
             Scene scene = new Scene(saveWindow);
+            scene.getStylesheets().add("listView.css");
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.setTitle("Save");
@@ -273,7 +306,7 @@ public class GuiForMapSolver  extends Application {
                         fileWriter.close();
                         stage.close();
                     } catch (Exception exception) {
-                        System.out.println("Exception in saving: "+exception);
+                        System.out.println("Exception in saving: " + exception);
                     }
                 }
             });
@@ -294,7 +327,7 @@ public class GuiForMapSolver  extends Application {
                     comboBox.setValue(comboBox.getItems().get(0));
                 } catch (Exception exception) {
                     if (isDebugEnabled)
-                        System.out.println("in load startup:"+exception);
+                        System.out.println("in load startup:" + exception);
                 }
 
                 Stage stage_load = new Stage();
@@ -320,7 +353,7 @@ public class GuiForMapSolver  extends Application {
 
                             //load name
                             if (line.contains(searchCriteriaName)) {
-                                System.out.println("loaded route: "+line.substring(searchCriteriaName.length()));
+                                System.out.println("loaded route: " + line.substring(searchCriteriaName.length()));
 
 
                                 //load width of saved map
@@ -343,7 +376,7 @@ public class GuiForMapSolver  extends Application {
 
                                 //loading start point
                             } else if (line.contains(searchCriteriaStart)) {
-                                String coordinates = line.substring(searchCriteriaStart.length(), line.length()-1);
+                                String coordinates = line.substring(searchCriteriaStart.length(), line.length() - 1);
 
                                 //find the separator of the two coordinates
                                 int counter = 0;
@@ -353,7 +386,7 @@ public class GuiForMapSolver  extends Application {
 
                                 //get the two coordinates out of the line
                                 int x = Integer.parseInt(coordinates.substring(0, counter));
-                                int y = Integer.parseInt(coordinates.substring(counter+1));
+                                int y = Integer.parseInt(coordinates.substring(counter + 1));
                                 startingXY[0] = x;
                                 startingXY[1] = y;
 
@@ -372,7 +405,7 @@ public class GuiForMapSolver  extends Application {
 
                                 //get the two coordinates out of the line
                                 int x = Integer.parseInt(coordinates.substring(0, counter));
-                                int y = Integer.parseInt(coordinates.substring(counter+1));
+                                int y = Integer.parseInt(coordinates.substring(counter + 1));
                                 throughXY[0] = x;
                                 throughXY[1] = y;
 
@@ -390,7 +423,7 @@ public class GuiForMapSolver  extends Application {
 
                                 //get the two coordinates out of the line
                                 int x = Integer.parseInt(coordinates.substring(0, counter));
-                                int y = Integer.parseInt(coordinates.substring(counter+1));
+                                int y = Integer.parseInt(coordinates.substring(counter + 1));
                                 endingXY[0] = x;
                                 endingXY[1] = y;
 
@@ -399,7 +432,7 @@ public class GuiForMapSolver  extends Application {
 
 
                             } else if (line.contains(searchCriteriaBlockade)) {
-                                String coordinates = line.substring(searchCriteriaBlockade.length(),line.length()-1);
+                                String coordinates = line.substring(searchCriteriaBlockade.length(), line.length() - 1);
                                 int counter = 0;
                                 while (coordinates.charAt(counter) != ',') {
                                     counter++;
@@ -408,7 +441,7 @@ public class GuiForMapSolver  extends Application {
 
                                 //get the two coordinates out of the line
                                 int x = Integer.parseInt(coordinates.substring(0, counter));
-                                int y = Integer.parseInt(coordinates.substring(counter+1));
+                                int y = Integer.parseInt(coordinates.substring(counter + 1));
 
                                 int[] blockade = {x, y};
                                 blockades.add(blockade);
@@ -416,14 +449,14 @@ public class GuiForMapSolver  extends Application {
 
                             } else {
                                 if (isDebugEnabled) {
-                                    System.out.println("Line not recognised: "+line);
+                                    System.out.println("Line not recognised: " + line);
                                 }
                             }
                         }
                         select_run.fire();
                     } catch (Exception exception) {
                         if (isDebugEnabled)
-                            System.out.println("In Load:"+exception);
+                            System.out.println("In Load:" + exception);
 
                     }
                 });
@@ -431,7 +464,7 @@ public class GuiForMapSolver  extends Application {
                 button_delete.setOnAction(delete -> {
                     File deletableFile = (File) comboBox.getValue();
                     if (isDebugEnabled) {
-                        System.out.println("File is deleted:"+deletableFile.delete());
+                        System.out.println("File is deleted:" + deletableFile.delete());
                     } else {
                         deletableFile.delete();
                     }
@@ -448,7 +481,7 @@ public class GuiForMapSolver  extends Application {
 
             } catch (Exception exception) {
                 if (isDebugEnabled)
-                    System.out.println("Exception in making load screen: "+exception);
+                    System.out.println("Exception in making load screen: " + exception);
             }
         });
 
@@ -457,9 +490,9 @@ public class GuiForMapSolver  extends Application {
             Stage stage = new Stage();
             FlowPane flowPane = new FlowPane();
             Label label_mapWidth = new Label("Map width:");
-            TextField textField_mapWidth = new TextField(""+mapWidthHeight[0]);
+            TextField textField_mapWidth = new TextField("" + mapWidthHeight[0]);
             Label label_mapHeight = new Label("Map height:");
-            TextField textField_mapHeight = new TextField(""+mapWidthHeight[1]);
+            TextField textField_mapHeight = new TextField("" + mapWidthHeight[1]);
             Button button_apply = new Button("Apply");
             Button button_reset = new Button("Reset");
             Button button_back = new Button("Back");
@@ -480,7 +513,7 @@ public class GuiForMapSolver  extends Application {
                         }
                 } catch (NumberFormatException exception) {
                     if (isDebugEnabled)
-                        System.out.println("Exception in getting map width: "+exception);
+                        System.out.println("Exception in getting map width: " + exception);
                 }
 
                 try {
@@ -493,7 +526,7 @@ public class GuiForMapSolver  extends Application {
                         }
                 } catch (NumberFormatException exception) {
                     if (isDebugEnabled)
-                        System.out.println("Exception in getting map height: "+exception);
+                        System.out.println("Exception in getting map height: " + exception);
                 }
 
 
@@ -519,37 +552,36 @@ public class GuiForMapSolver  extends Application {
         select_send.setOnAction(event -> {
             String route = "";
             for (Instructions instruction : this.instructions) {
-                switch (instruction){
+                switch (instruction) {
                     case Forward:
                         route += "w";
                         break;
                     case Left:
                         route += "a";
                         break;
-                    case Right:
-                        route += "d";
-                        break;
                     case Backward:
                         route += "s";
                         break;
+                    case Right:
+                        route += "d";
+                        break;
                     case Stop:
-                    route += "h";
+                        route += "h";
                     case None:
-                        route+= "n";
-                    break;
+                        route += "n";
+                        break;
                 }
             }
-           this.routeCallBack.sendRoute(route);
+            this.routeCallBack.sendRoute(route);
         });
 
         borderpane.setCenter(gridPaneMap);
         borderpane.setBottom(vBoxMenu);
         Scene scene = new Scene(borderpane);
+        scene.getStylesheets().add("listView.css");
         primaryStage.setScene(scene);
         primaryStage.setTitle("Map creator");
         primaryStage.show();
-
-
     }
 
 
