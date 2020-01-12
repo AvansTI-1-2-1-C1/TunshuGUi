@@ -35,8 +35,6 @@ public class Main extends Application implements RouteCallBack{
         stage.setWidth(800);
         stage.setResizable(false);
 
-        System.out.println("try");
-
         stage.setTitle("Tunshu console");
 
 
