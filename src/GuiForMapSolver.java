@@ -529,9 +529,14 @@ public class GuiForMapSolver  extends Application {
                     case Right:
                         route += "d";
                         break;
-                    case Stop:
+                    case Backward:
                         route += "s";
                         break;
+                    case Stop:
+                    route += "h";
+                    case None:
+                        route+= "n";
+                    break;
                 }
             }
            this.routeCallBack.sendRoute(route);
