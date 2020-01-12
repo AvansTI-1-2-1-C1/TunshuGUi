@@ -29,16 +29,17 @@ public class GuiForMapSolver  extends Application {
     private RouteCallBack routeCallBack;
     private GridPane gridPaneMap;
     private boolean isDebugEnabled;
-    private Stage stage = new Stage();
+    private Stage stage;
 
-    /**
-     */
+
     public GuiForMapSolver(Stage stage, RouteCallBack route) {
         try{
+            this.stage = stage;
             this.routeCallBack = route;
-            start(stage);
-        }catch (Exception e){
-
+            start(this.stage);
+        }catch (Exception exception){
+            if (isDebugEnabled)
+                System.out.println(exception);
         }
     }
 
@@ -95,9 +96,9 @@ public class GuiForMapSolver  extends Application {
 
         select_back.setOnAction(event -> primaryStage.close());
 
-        //event handlers for Done button
         select_run.setOnAction(event -> {
-            this.instructions.clear();
+            //repaint the map and set clear the instructions array
+            instructions.clear();
             repaintMap(startingXY, throughXY, endingXY, blockades, mapWidthHeight);
 
             //check if the start and end are defined
@@ -111,21 +112,21 @@ public class GuiForMapSolver  extends Application {
             if (throughXY[0] != -1)
                 throughEnablad = true;
 
-            //information to show the user what was selected
-            {
-                if (isDebugEnabled) {
-                    System.out.println("starting point: (" + startingXY[0] + "," + startingXY[1] + ")");
-                    if (throughEnablad) {
-                        System.out.println("through point: (" + throughXY[0] + "," + throughXY[1] + ")");
-                    }
-                    System.out.println("ending point: (" + endingXY[0] + "," + endingXY[1] + ")");
-                    System.out.print("blockades: ");
-                    for (int[] b : blockades) {
-                        System.out.printf("(%d,%d)", b[0], b[1]);
-                    }
-                    System.out.println();
-                }
-            }
+//            //information to show the user what was selected
+//            {
+//                if (isDebugEnabled) {
+//                    System.out.println("starting point: (" + startingXY[0] + "," + startingXY[1] + ")");
+//                    if (throughEnablad) {
+//                        System.out.println("through point: (" + throughXY[0] + "," + throughXY[1] + ")");
+//                    }
+//                    System.out.println("ending point: (" + endingXY[0] + "," + endingXY[1] + ")");
+//                    System.out.print("blockades: ");
+//                    for (int[] b : blockades) {
+//                        System.out.printf("(%d,%d)", b[0], b[1]);
+//                    }
+//                    System.out.println();
+//                }
+//            }
 
             //the enabling of the map solver
             mapObject.setMap(MapSolver.makeMap(mapWidthHeight[0], mapWidthHeight[1]));
@@ -163,6 +164,7 @@ public class GuiForMapSolver  extends Application {
                         if (throughEnablad) {
                             instructions.addAll(mapObject.getInstructions());
                             instructions.add(Instructions.Stop);
+                            System.out.println(instructions);
                             WindDirections lastFacingDirection = mapObject.getLastDirection();
                             mapObject.setMap(MapSolver.makeMap(mapWidthHeight[0], mapWidthHeight[1]), lastFacingDirection);
                             mapObject.enableMapSolve(throughXY[0], throughXY[1], endingXY[0], endingXY[1]);
@@ -188,7 +190,6 @@ public class GuiForMapSolver  extends Application {
 
         //when the reset button is pressed this will be executed
         select_reset.setOnAction(event -> {
-            this.instructions.clear();
             mapObject.setMap(MapSolver.makeMap(mapWidthHeight[0], mapWidthHeight[1]));
             gridPaneMap.getChildren().clear();
             blockades.clear();
@@ -312,7 +313,7 @@ public class GuiForMapSolver  extends Application {
                         String searchCriteriaStart = "StartingPoint(";
                         String searchCriteriaThrough = "ThroughPoint(";
                         String searchCriteriaEnd = "EndPoint(";
-                        String searchCriteria = "Blockade(";
+                        String searchCriteriaBlockade = "Blockade(";
 
                         //while loop to go through every line of the file
                         while (scanner.hasNext()) {
@@ -320,7 +321,7 @@ public class GuiForMapSolver  extends Application {
 
                             //load name
                             if (line.contains(searchCriteriaName)) {
-                                System.out.println(line.substring(searchCriteria.length()));
+                                System.out.println("loaded route: "+line.substring(searchCriteriaName.length()));
 
 
                                 //load width of saved map
@@ -345,7 +346,7 @@ public class GuiForMapSolver  extends Application {
                             } else if (line.contains(searchCriteriaStart)) {
                                 String coordinates = line.substring(searchCriteriaStart.length(), line.length()-1);
 
-                                //find the seperator of the two coordinates
+                                //find the separator of the two coordinates
                                 int counter = 0;
                                 while (coordinates.charAt(counter) != ',') {
                                     counter++;
@@ -357,13 +358,14 @@ public class GuiForMapSolver  extends Application {
                                 startingXY[0] = x;
                                 startingXY[1] = y;
 
+
                                 //color the start button the starting color
                                 gridPaneMap.getChildren().get(mapObject.getMapWidth() * startingXY[1] + startingXY[0]).setStyle(mapColorStart);
 
 
                                 //loading through point
                             } else if (line.contains(searchCriteriaThrough)) {
-                                String coordinates = line.substring(searchCriteriaThrough.length(), line.length() - 2);
+                                String coordinates = line.substring(searchCriteriaThrough.length(), line.length() - 1);
                                 int counter = 0;
                                 while (coordinates.charAt(counter) != ',') {
                                     counter++;
@@ -381,7 +383,7 @@ public class GuiForMapSolver  extends Application {
 
                                 //loading endpoint
                             } else if (line.contains(searchCriteriaEnd)) {
-                                String coordinates = line.substring(searchCriteriaEnd.length(), line.length() - 2);
+                                String coordinates = line.substring(searchCriteriaEnd.length(), line.length() - 1);
                                 int counter = 0;
                                 while (coordinates.charAt(counter) != ',') {
                                     counter++;
@@ -397,12 +399,13 @@ public class GuiForMapSolver  extends Application {
                                 gridPaneMap.getChildren().get(mapObject.getMapWidth() * endingXY[1] + endingXY[0]).setStyle(mapColorEnd);
 
 
-                            } else if (line.contains("Blockade:")) {
-                                String coordinates = line.substring(9);
+                            } else if (line.contains(searchCriteriaBlockade)) {
+                                String coordinates = line.substring(searchCriteriaBlockade.length(),line.length()-1);
                                 int counter = 0;
                                 while (coordinates.charAt(counter) != ',') {
                                     counter++;
                                 }
+
 
                                 //get the two coordinates out of the line
                                 int x = Integer.parseInt(coordinates.substring(0, counter));
@@ -452,69 +455,66 @@ public class GuiForMapSolver  extends Application {
 
 
         select_configure.setOnAction(configure -> {
-            if(!stage.isShowing()) {
-                FlowPane flowPane = new FlowPane();
-                Label label_mapWidth = new Label("Map width:");
-                TextField textField_mapWidth = new TextField();
-                Label label_mapHeight = new Label("Map height:");
-                TextField textField_mapHeight = new TextField();
-                Button button_apply = new Button("Apply");
-                Button button_reset = new Button("Reset");
-                Button button_back = new Button("Back");
-                HBox hBox_buttons = new HBox(button_apply, button_reset, button_back);
-                CheckBox checkBox = new CheckBox("Debugger");
+            Stage stage = new Stage();
+            FlowPane flowPane = new FlowPane();
+            Label label_mapWidth = new Label("Map width:");
+            TextField textField_mapWidth = new TextField(""+mapWidthHeight[0]);
+            Label label_mapHeight = new Label("Map height:");
+            TextField textField_mapHeight = new TextField(""+mapWidthHeight[1]);
+            Button button_apply = new Button("Apply");
+            Button button_reset = new Button("Reset");
+            Button button_back = new Button("Back");
+            HBox hBox_buttons = new HBox(button_apply, button_reset, button_back);
+            CheckBox checkBox = new CheckBox("Debugger");
+            checkBox.setSelected(isDebugEnabled);
+
+            flowPane.getChildren().addAll(label_mapWidth, textField_mapWidth, label_mapHeight, textField_mapHeight, checkBox, hBox_buttons);
+            flowPane.setPrefWidth(200);
+            button_apply.setOnAction(event1 -> {
+                try {
+                    if (!textField_mapWidth.getText().isEmpty())
+                        if (Integer.parseInt(textField_mapWidth.getText()) > 1 && Integer.parseInt(textField_mapWidth.getText()) < 50) {
+                            mapWidthHeight[0] = Integer.parseInt(textField_mapWidth.getText());
+                        } else {
+                            if (isDebugEnabled)
+                                System.out.println("no valid map width selected");
+                        }
+                } catch (NumberFormatException exception) {
+                    if (isDebugEnabled)
+                        System.out.println("Exception in getting map width: "+exception);
+                }
+
+                try {
+                    if (!textField_mapHeight.getText().isEmpty())
+                        if (Integer.parseInt(textField_mapHeight.getText()) > 1 && Integer.parseInt(textField_mapHeight.getText()) < 31) {
+                            mapWidthHeight[1] = Integer.parseInt(textField_mapHeight.getText());
+                        } else {
+                            if (isDebugEnabled)
+                                System.out.println("no valid map height selected");
+                        }
+                } catch (NumberFormatException exception) {
+                    if (isDebugEnabled)
+                        System.out.println("Exception in getting map height: "+exception);
+                }
+
+
+                isDebugEnabled = checkBox.isSelected();
+                select_reset.fire();
+            });
+
+            button_back.setOnAction(close -> stage.close());
+
+            button_reset.setOnAction(reset -> {
+                mapWidthHeight[0] = 25;
+                mapWidthHeight[1] = 25;
                 checkBox.setSelected(false);
+                button_apply.fire();
+            });
 
-                flowPane.getChildren().addAll(label_mapWidth, textField_mapWidth, label_mapHeight, textField_mapHeight, checkBox, hBox_buttons);
-                flowPane.setPrefWidth(200);
-                button_apply.setOnAction(event1 -> {
-                    try {
-                        if (!textField_mapWidth.getText().isEmpty())
-                            if (Integer.parseInt(textField_mapWidth.getText()) > 1 && Integer.parseInt(textField_mapWidth.getText()) < 50) {
-                                mapWidthHeight[0] = Integer.parseInt(textField_mapWidth.getText());
-                            } else {
-                                if (isDebugEnabled)
-                                    System.out.println("no valid map width selected");
-                            }
-                    } catch (NumberFormatException exception) {
-                        if (isDebugEnabled)
-                            System.out.println("Exception in getting map width: " + exception);
-                    }
-
-                    try {
-                        if (!textField_mapHeight.getText().isEmpty())
-                            if (Integer.parseInt(textField_mapHeight.getText()) > 1 && Integer.parseInt(textField_mapHeight.getText()) < 31) {
-                                mapWidthHeight[1] = Integer.parseInt(textField_mapHeight.getText());
-                            } else {
-                                if (isDebugEnabled)
-                                    System.out.println("no valid map height selected");
-                            }
-                    } catch (NumberFormatException exception) {
-                        if (isDebugEnabled)
-                            System.out.println("Exception in getting map height: " + exception);
-                    }
-
-
-                    isDebugEnabled = checkBox.isSelected();
-                    select_reset.fire();
-                });
-
-                button_back.setOnAction(close -> stage.close());
-
-                button_reset.setOnAction(reset -> {
-                    mapWidthHeight[0] = 25;
-                    mapWidthHeight[1] = 25;
-                    checkBox.setSelected(false);
-                    button_apply.fire();
-                });
-
-                Scene scene = new Scene(flowPane);
-                stage.setScene(scene);
-                stage.setTitle("Configure");
-                stage.show();
-            }else {
-                stage.toFront();
-            }
+            Scene scene = new Scene(flowPane);
+            stage.setScene(scene);
+            stage.setTitle("Configure");
+            stage.show();
         });
 
         select_send.setOnAction(event -> {

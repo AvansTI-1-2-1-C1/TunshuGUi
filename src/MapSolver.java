@@ -459,6 +459,11 @@ public class MapSolver implements Updatable {
         return instructions;
     }
 
+    /**
+     * make blockade at the given x and y
+     * @param x coordinate
+     * @param y coordinate
+     */
     public void makeBlockade(int x, int y) {
         map[x][y].setBlocked(true);
     }
